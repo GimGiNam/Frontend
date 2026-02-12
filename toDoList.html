@@ -14,18 +14,18 @@
     <nav class="navbar">
         <div class="logo">toDayHaveTo...</div>
         <ul class="menu">
-            <li><a href="#">추가</a></li>
-            <li><a href="#">조회</a></li>
-            <li><a href="#">완료</a></li>
-            <li><a href="#">삭제</a></li>
+            <li><a href="javascript:menuAdd();">추가</a></li>
+            <li><a href="javascript:menuCheck();">조회</a></li>
+            <li><a href="javascript:menuComplete();">완료</a></li>
+            <li><a href="javascript:menuRemove();">삭제</a></li>
         </ul>
         <button class="btn-login">로그인</button> 
     </nav>
 
     <div class="container">
-        <div class="input-section">
-            <input type="text" id="taskInput" placeholder="할 일을 입력하세요">
-            <button id="addBtn">추가</button>
+        <div id="toDoList-section">
+            <!-- <input type="text" id="taskInput" placeholder="할 일을 입력하세요">
+            <button id="addBtn">추가</button> -->
         </div>
         <ul id="taskList"> </ul>
     </div>
