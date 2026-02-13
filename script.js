@@ -112,6 +112,8 @@ function addTask() {
         return;
     }
 
+
+
     // li 요소 생성
     const li = document.createElement('li');
     li.textContent = task;
@@ -120,14 +122,23 @@ function addTask() {
     const delBtn = document.createElement('button');
     delBtn.textContent = "삭제";
     delBtn.setAttribute("id", "taskAddBtn");
+
     delBtn.onclick = function() {
 
         console.log("onclick");
-        arrToDoList.pop(task);
-        if ("task" in dictToDoList) {
-            dictToDoList.Remove(task);
-            li.removeChild(li);
-            taskList.removeChild(li);
+        console.log("task = " + task);
+        const index = arrToDoList.indexOf(task);
+        if (index > -1) {
+            arrToDoList.splice(index, 1);
+        }
+
+        const deleteKey = task in dictToDoList;
+        if (deleteKey) {
+            delete dictToDoList.task;
+        }
+
+        if (index > -1 && deleteKey) {
+             taskList.removeChild(li);
         }
     };
 
@@ -151,6 +162,8 @@ function addTask() {
 
         li.appendChild(delBtn);
         taskList.appendChild(li);
+    } else {
+        alert("현재 저장된 ToDoList 입니다.");
     }
 }
 
@@ -159,12 +172,14 @@ function CheckTask() {
 
     console.log("CheckTask");
     console.log(arrToDoList);
+    let strToDoList;
     for (let i = 0; i < arrToDoList.length; i++) {
         // li 요소 생성
         const li = document.createElement('li');
         li.textContent = arrToDoList[i];
 
-        let strToDoList = arrToDoList[i];
+        strToDoList = null;
+        strToDoList = arrToDoList[i];
         console.log(strToDoList);
 
          // 미완료 버튼 생성
@@ -179,47 +194,66 @@ function CheckTask() {
                 btn.textContent = "완료";
                 btn.setAttribute('id', 'CompleteBtn')
             } else {
-
+                
                 btn.textContent = "미완료";
                 btn.setAttribute('id', 'unCompleteBtn')
             }
         } else if (currentMenuList == menuList.Complete) {
 
+
+            const label1 = document.createElement('label');
+            label1.textContent = "미완료 "
+
+            const radio1 = document.createElement('input');
+            radio1.type = 'radio';
+            radio1.name = strToDoList; // 같은 이름으로 그룹화
+            radio1.value = 'unCompleteBtn';
+            radio1.id = 'toDoListRadio';
+
+            const label2 = document.createElement('label');
+            label2.textContent = "완료 "
+
+            const radio2 = document.createElement('input');
+            radio2.type = 'radio';
+            radio2.name = strToDoList; // 같은 이름으로 그룹화
+            radio2.value = 'CompleteBtn';
+            radio2.id = 'toDoListRadio';
+
+            label1.appendChild(radio1);
+            label2.appendChild(radio2);
+
+            li.appendChild(label1);
+            li.appendChild(label2);
+
             if (dictToDoList[strToDoList]) {
 
-                btn.textContent = "완료";
-                btn.setAttribute('id', 'CompleteBtn')
+                radio2.checked = true;
             } else {
 
-                btn.textContent = "미완료";
-                btn.setAttribute('id', 'unCompleteBtn')
-                btn.onclick = function() {
-
-                    console.log("click");
-                    btn.removeAttribute('id')
-                    btn.textContent = "완료";
-                    btn.setAttribute('id', 'CompleteBtn')
-                    dictToDoList[strToDoList] = true;
-                };
+                radio1.checked = true;
             }
+
+            // li.appendChild(btn);
+            // taskList.appendChild(li);
           
         } else if (currentMenuList == menuList.Remove) {
 
             btn.textContent = "삭제";
             btn.setAttribute("id", "taskAddBtn");
+            const searchName = arrToDoList[i];
 
             btn.onclick = function() {
 
                 console.log("click");
-                const deleteValue = arrToDoList.includes(strToDoList)       // 배열에 값이 있는지 확인
-                if (deleteValue) {
-                    arrToDoList.pop(strToDoList);
+                console.log("searchName = " + searchName);
+                const index = arrToDoList.indexOf(searchName);
+                if (index > -1) {
+                    arrToDoList.splice(index, 1);
                 }
 
-                const deleteKey = strToDoList in dictToDoList               // 사전에 키가 있는지 확인
+                const deleteKey = searchName in dictToDoList
                 if (deleteKey) {
-                    delete dictToDoList.strToDoList;
-                    console.log(strToDoList); 
+                    delete dictToDoList.searchName;
                 }
                
                 taskList.removeChild(li);
@@ -228,5 +262,37 @@ function CheckTask() {
 
         li.appendChild(btn);
         taskList.appendChild(li);
+
+        if (currentMenuList == menuList.Complete) {
+
+            for (let i = 0; i < arrToDoList.length; i++) {
+
+                const searchName = 'input[name=' + arrToDoList[i] + ']' ;
+                const radioButtons = document.querySelectorAll(searchName);
+                radioButtons.forEach(button => {
+                console.log(radioButtons.forEach);
+                const arrName = arrToDoList[i];
+                
+                button.addEventListener('change', (event) => {
+                    // 현재 클릭(선택)된 요소의 value 출력
+                    console.log(event.target.value);  
+
+                    if (event.target.value === "unCompleteBtn") {
+                    
+                            if (arrName in dictToDoList) {
+
+                                dictToDoList[arrName] = false;
+                            }
+                        } else {
+
+                            if (arrName in dictToDoList) {
+
+                                dictToDoList[arrName] = true;
+                            }
+                        }
+                    });
+                });
+            }
+        }
     }
 }
