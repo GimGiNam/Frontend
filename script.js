@@ -112,8 +112,6 @@ function addTask() {
         return;
     }
 
-
-
     // li 요소 생성
     const li = document.createElement('li');
     li.textContent = task;
@@ -200,7 +198,6 @@ function CheckTask() {
             }
         } else if (currentMenuList == menuList.Complete) {
 
-
             const label1 = document.createElement('label');
             label1.textContent = "미완료 "
 
@@ -219,23 +216,14 @@ function CheckTask() {
             radio2.value = 'CompleteBtn';
             radio2.id = 'toDoListRadio';
 
+            radio1.checked = !dictToDoList[strToDoList];
+            radio2.checked = dictToDoList[strToDoList]
+
             label1.appendChild(radio1);
             label2.appendChild(radio2);
 
             li.appendChild(label1);
             li.appendChild(label2);
-
-            if (dictToDoList[strToDoList]) {
-
-                radio2.checked = true;
-            } else {
-
-                radio1.checked = true;
-            }
-
-            // li.appendChild(btn);
-            // taskList.appendChild(li);
-          
         } else if (currentMenuList == menuList.Remove) {
 
             btn.textContent = "삭제";
@@ -270,27 +258,16 @@ function CheckTask() {
                 const searchName = 'input[name=' + arrToDoList[i] + ']' ;
                 const radioButtons = document.querySelectorAll(searchName);
                 radioButtons.forEach(button => {
-                console.log(radioButtons.forEach);
-                const arrName = arrToDoList[i];
-                
-                button.addEventListener('change', (event) => {
-                    // 현재 클릭(선택)된 요소의 value 출력
-                    console.log(event.target.value);  
-
-                    if (event.target.value === "unCompleteBtn") {
+                    console.log(radioButtons.forEach);
+                    const arrName = arrToDoList[i];
                     
+                        button.addEventListener('change', (event) => {
+                            // 현재 클릭(선택)된 요소의 value 출력
+                            console.log(event.target.value);        
                             if (arrName in dictToDoList) {
-
-                                dictToDoList[arrName] = false;
+                                    dictToDoList[arrName] = event.target.value === "CompleteBtn";
                             }
-                        } else {
-
-                            if (arrName in dictToDoList) {
-
-                                dictToDoList[arrName] = true;
-                            }
-                        }
-                    });
+                        });
                 });
             }
         }
